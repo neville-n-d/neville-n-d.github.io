@@ -1,89 +1,124 @@
-// Animated background: floating orbs/particles
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let width, height;
-let particles = [];
-const PARTICLE_COUNT = 36;
+// --- 3D HERO SECTION (Three.js) ---
+const threeHero = document.getElementById('three-hero');
+if (threeHero) {
+  // Setup Three.js scene
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, threeHero.clientWidth / threeHero.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas: threeHero, alpha: true, antialias: true });
+  function resizeThreeHero() {
+    const w = threeHero.parentElement.offsetWidth;
+    const h = threeHero.parentElement.offsetHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resizeThreeHero();
+  window.addEventListener('resize', resizeThreeHero);
 
-function resizeCanvas() {
-  width = window.innerWidth;
-  height = window.innerHeight;
-  canvas.width = width;
-  canvas.height = height;
-}
+  // Add a spinning cube and floating orbs
+  const geometry = new THREE.BoxGeometry(2, 2, 2);
+  const material = new THREE.MeshStandardMaterial({ color: 0xffb347, metalness: 0.5, roughness: 0.3 });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
 
-function randomColor() {
-  const colors = ['#ffb347', '#ffcc80', '#f5f6fa', '#b2becd'];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
+  // Add floating orbs
+  const orbs = [];
+  for (let i = 0; i < 8; i++) {
+    const orbGeo = new THREE.SphereGeometry(0.4 + Math.random() * 0.3, 32, 32);
+    const orbMat = new THREE.MeshStandardMaterial({ color: 0xffcc80, emissive: 0xffb347, emissiveIntensity: 0.2 });
+    const orb = new THREE.Mesh(orbGeo, orbMat);
+    orb.position.set(Math.sin(i) * 4, Math.cos(i) * 2, Math.cos(i) * 4);
+    scene.add(orb);
+    orbs.push({ mesh: orb, angle: Math.random() * Math.PI * 2, speed: 0.003 + Math.random() * 0.003 });
+  }
 
-function createParticles() {
-  particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: 18 + Math.random() * 22,
-      dx: (Math.random() - 0.5) * 0.7,
-      dy: (Math.random() - 0.5) * 0.7,
-      color: randomColor(),
-      alpha: 0.12 + Math.random() * 0.18
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffb347, 0.7);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+
+  camera.position.z = 7;
+
+  function animateHero() {
+    cube.rotation.x += 0.008;
+    cube.rotation.y += 0.012;
+    orbs.forEach((o, i) => {
+      o.angle += o.speed;
+      o.mesh.position.x = Math.sin(o.angle + i) * 4;
+      o.mesh.position.y = Math.cos(o.angle + i * 0.7) * 2;
+      o.mesh.position.z = Math.cos(o.angle + i) * 4;
     });
+    renderer.render(scene, camera);
+    requestAnimationFrame(animateHero);
+  }
+  animateHero();
+}
+
+// --- DYNAMIC GITHUB REPOS (Responsive Grid) ---
+async function loadRepos3D() {
+  const container = document.getElementById('repos-3d');
+  if (!container) return;
+  container.innerHTML = '<p>Loading repositories...</p>';
+  try {
+    const res = await fetch('https://api.github.com/users/neville-n-d/repos?sort=updated');
+    const repos = await res.json();
+    container.innerHTML = '';
+    if (!repos.length) {
+      container.innerHTML = '<p>No repositories found.</p>';
+      return;
+    }
+    repos.forEach(repo => {
+      const card = document.createElement('div');
+      card.className = 'repo-card-3d';
+      card.innerHTML = `
+        <h3>${repo.name}</h3>
+        <p>${repo.description ? repo.description : 'No description.'}</p>
+        <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+      `;
+      container.appendChild(card);
+    });
+  } catch (e) {
+    container.innerHTML = '<p>Could not load repositories.</p>';
   }
 }
+loadRepos3D();
 
-function drawParticles() {
-  ctx.clearRect(0, 0, width, height);
-  for (const p of particles) {
-    ctx.save();
-    ctx.globalAlpha = p.alpha;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
-    ctx.shadowColor = p.color;
-    ctx.shadowBlur = 24;
-    ctx.fill();
-    ctx.restore();
-    p.x += p.dx;
-    p.y += p.dy;
-    if (p.x < -p.r) p.x = width + p.r;
-    if (p.x > width + p.r) p.x = -p.r;
-    if (p.y < -p.r) p.y = height + p.r;
-    if (p.y > height + p.r) p.y = -p.r;
-  }
-}
-
-function animate() {
-  drawParticles();
-  requestAnimationFrame(animate);
-}
-
-window.addEventListener('resize', () => {
-  resizeCanvas();
-  createParticles();
-});
-
-resizeCanvas();
-createParticles();
-animate();
-
-// Set current year in footer
+// --- FOOTER YEAR ---
 const yearSpan = document.getElementById('year');
 if (yearSpan) {
   yearSpan.textContent = new Date().getFullYear();
 }
 
-// Smooth scroll for nav links
+// --- SMOOTH SCROLL ---
 const navLinks = document.querySelectorAll('nav a[href^="#"]');
 navLinks.forEach(link => {
   link.addEventListener('click', function(e) {
     e.preventDefault();
     const target = document.querySelector(this.getAttribute('href'));
     if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 40,
-        behavior: 'smooth'
-      });
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
-}); 
+});
+
+// --- SECTION ENTRANCE ANIMATION ---
+function animateSectionsOnScroll() {
+  const observer = new window.IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-slide-up, .stagger').forEach(el => {
+    observer.observe(el);
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', animateSectionsOnScroll);
+} else {
+  animateSectionsOnScroll();
+} 
