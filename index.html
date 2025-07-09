@@ -10,52 +10,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <nav>
-      <div class="logo">Neville N. D.</div>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-    <section class="hero">
-      <canvas id="three-hero"></canvas>
-      <div class="hero-content">
-        <h1>Hi, I'm <span class="highlight">Neville N. D.</span></h1>
-        <p class="subtitle">A passionate developer & creator</p>
-        <div class="social-links">
-          <a href="https://github.com/neville-n-d" target="_blank" aria-label="GitHub"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"></a>
-          <a href="mailto:neville@example.com" aria-label="Email"><img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email"></a>
+  <div class="site-content">
+    <header>
+      <nav>
+        <div class="logo">Neville N. D.</div>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <section class="hero">
+        <canvas id="three-hero"></canvas>
+        <div class="hero-content">
+          <h1>Hi, I'm <span class="highlight">Neville N. D.</span></h1>
+          <p class="subtitle">A passionate developer & creator</p>
+          <div class="social-links">
+            <a href="https://github.com/neville-n-d" target="_blank" aria-label="GitHub"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"></a>
+            <a href="mailto:neville@example.com" aria-label="Email"><img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email"></a>
+          </div>
         </div>
+      </section>
+    </header>
+    <main>
+      <div class="main-sections">
+        <section id="about" class="section fade-slide-up">
+          <div class="stagger">
+            <h2>About Me</h2>
+            <p>I'm a developer who loves building beautiful and interactive web experiences. Welcome to my portfolio!</p>
+          </div>
+        </section>
+        <section id="projects" class="section fade-slide-up" id="projects">
+          <div class="stagger">
+            <h2>Projects</h2>
+            <div id="repos-3d" class="repos-3d"></div>
+          </div>
+        </section>
       </div>
-    </section>
-  </header>
-  <main>
-    <section id="about" class="section fade-slide-up">
-      <div class="stagger">
-        <h2>About Me</h2>
-        <p>I'm a developer who loves building beautiful and interactive web experiences. Welcome to my portfolio!</p>
-      </div>
-    </section>
-    <section id="projects" class="section fade-slide-up" id="projects">
-      <div class="stagger">
-        <h2>Projects</h2>
-        <div id="repos-3d" class="repos-3d"></div>
-      </div>
-    </section>
-    <section id="contact" class="section fade-slide-up">
-      <div class="stagger">
-        <h2>Contact</h2>
-        <form class="contact-form" action="mailto:neville@example.com" method="POST" enctype="text/plain">
-          <input type="text" name="name" placeholder="Your Name" required>
-          <input type="email" name="email" placeholder="Your Email" required>
-          <textarea name="message" placeholder="Your Message" required></textarea>
-          <button type="submit">Send</button>
-        </form>
-      </div>
-    </section>
-  </main>
+    </main>
+  </div>
   <footer>
     <p>&copy; <span id="year"></span> Neville N. D.. All rights reserved.</p>
   </footer>
